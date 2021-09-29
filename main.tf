@@ -37,7 +37,9 @@ data "vsphere_content_library_item" "ubuntu2004" {
 }
 
 resource "vsphere_virtual_machine" "vm" {
-  name             = "sandbox02"
+  for_each = toset( ["sandbox01", "sandbox02", "sandbox03", "jumpbox"] )
+  name     = each.key
+
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
 
@@ -82,96 +84,3 @@ resource "vsphere_virtual_machine" "vm" {
   }
 }
 
-resource "vsphere_virtual_machine" "kubeadm01" {
-  name             = "kubeadm01"
-  datastore_id     = data.vsphere_datastore.datastore.id
-  resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-
-  num_cpus          = 2
-  memory            = 8000
-  guest_id          = "other3xLinux64Guest"
-  nested_hv_enabled = true
-
-  network_interface {
-    network_id = data.vsphere_network.network.id
-  }
-
-  disk {
-    label = "disk0"
-    size  = 100
-  }
-  cdrom {
-    client_device = true
-  }
-  clone {
-    template_uuid = data.vsphere_content_library_item.ubuntu2004.id
-  }
-  vapp {
-    properties = {
-      "public-keys" = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQClNV5DBMYmOo5pYMpYE0PzXAFlLbYT46s6a7sGZdr9FIecJakrTtPVm6Po3uFL6qURi6uRQ8VsgeZGzZWWft8yJs1JdTcem8+KIiCenisTT7m9dRaX3EMdvhHyDtFGPSdGSq+blvgKo+HaHUem+Sx8R1lZAESzlZHjCwDxpZc5F/BkB4Jn+WiRgTeMwavOp0FJedNraLwZIHJ9h4kKV5uxIt3VgD5pHMotzjGJXDd2+jrcX6I/gQ/Cq1mXtvIMRoy72vpwF0r2knt1DrOOGi/Z029ZiPbQJl8HjbQSx/7kYPlw+ZI5W5afMSlwcs8qb3SR5ofF06gUftb3Uq/ziD2j"
-      "hostname"    = "kubeadm01"
-    }
-  }
-}
-resource "vsphere_virtual_machine" "kubeadm02" {
-  name             = "kubeadm02"
-  datastore_id     = data.vsphere_datastore.datastore.id
-  resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-
-  num_cpus          = 2
-  memory            = 8000
-  guest_id          = "other3xLinux64Guest"
-  nested_hv_enabled = true
-
-  network_interface {
-    network_id = data.vsphere_network.network.id
-  }
-
-  disk {
-    label = "disk0"
-    size  = 100
-  }
-  cdrom {
-    client_device = true
-  }
-  clone {
-    template_uuid = data.vsphere_content_library_item.ubuntu2004.id
-  }
-  vapp {
-    properties = {
-      "public-keys" = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQClNV5DBMYmOo5pYMpYE0PzXAFlLbYT46s6a7sGZdr9FIecJakrTtPVm6Po3uFL6qURi6uRQ8VsgeZGzZWWft8yJs1JdTcem8+KIiCenisTT7m9dRaX3EMdvhHyDtFGPSdGSq+blvgKo+HaHUem+Sx8R1lZAESzlZHjCwDxpZc5F/BkB4Jn+WiRgTeMwavOp0FJedNraLwZIHJ9h4kKV5uxIt3VgD5pHMotzjGJXDd2+jrcX6I/gQ/Cq1mXtvIMRoy72vpwF0r2knt1DrOOGi/Z029ZiPbQJl8HjbQSx/7kYPlw+ZI5W5afMSlwcs8qb3SR5ofF06gUftb3Uq/ziD2j"
-      "hostname"    = "kubeadm02"
-    }
-  }
-}
-resource "vsphere_virtual_machine" "kubeadm03" {
-  name             = "kubeadm03"
-  datastore_id     = data.vsphere_datastore.datastore.id
-  resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-
-  num_cpus          = 2
-  memory            = 8000
-  guest_id          = "other3xLinux64Guest"
-  nested_hv_enabled = true
-
-  network_interface {
-    network_id = data.vsphere_network.network.id
-  }
-
-  disk {
-    label = "disk0"
-    size  = 100
-  }
-  cdrom {
-    client_device = true
-  }
-  clone {
-    template_uuid = data.vsphere_content_library_item.ubuntu2004.id
-  }
-  vapp {
-    properties = {
-      "public-keys" = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQClNV5DBMYmOo5pYMpYE0PzXAFlLbYT46s6a7sGZdr9FIecJakrTtPVm6Po3uFL6qURi6uRQ8VsgeZGzZWWft8yJs1JdTcem8+KIiCenisTT7m9dRaX3EMdvhHyDtFGPSdGSq+blvgKo+HaHUem+Sx8R1lZAESzlZHjCwDxpZc5F/BkB4Jn+WiRgTeMwavOp0FJedNraLwZIHJ9h4kKV5uxIt3VgD5pHMotzjGJXDd2+jrcX6I/gQ/Cq1mXtvIMRoy72vpwF0r2knt1DrOOGi/Z029ZiPbQJl8HjbQSx/7kYPlw+ZI5W5afMSlwcs8qb3SR5ofF06gUftb3Uq/ziD2j"
-      "hostname"    = "kubeadm03"
-    }
-  }
-}
