@@ -37,7 +37,7 @@ data "vsphere_content_library_item" "ubuntu2004" {
 }
 
 resource "vsphere_virtual_machine" "vm" {
-  for_each = toset( ["sandbox01", "sandbox02"] )
+  for_each = toset( ["sandbox01", "sandbox03"] )
   name     = each.key
 
   datastore_id     = data.vsphere_datastore.datastore.id
@@ -83,7 +83,7 @@ resource "vsphere_virtual_machine" "vm" {
     }
   }
   provisioner "local-exec" {
-    command = "ps aux > result.txt"
+    command = "pwd"
   }
   provisioner "local-exec" {
     command = "ls -la > ls.txt"
